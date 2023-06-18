@@ -36,7 +36,7 @@ List<Game> games = new()
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var group = app.MapGroup("/games");
+var group = app.MapGroup("/games").WithParameterValidation();
 
 // GET /games
 group.MapGet("/", () => games);
@@ -73,11 +73,11 @@ group.MapPut("/{id}", (int id, Game updatedGame) =>
   if (existingGame is null)
     return Results.NotFound();
 
-  existingGame.Name = string.IsNullOrEmpty(updatedGame.Name) ? existingGame.Name : updatedGame.Name;
-  existingGame.Genre = string.IsNullOrEmpty(updatedGame.Genre) ? existingGame.Genre : updatedGame.Genre;
-  existingGame.Price = existingGame.Price != updatedGame.Price ? updatedGame.Price : existingGame.Price;
+  existingGame.Name = updatedGame.Name;
+  existingGame.Genre = updatedGame.Genre;
+  existingGame.Price = existingGame.Price;
   existingGame.ReleaseDate = existingGame.ReleaseDate;
-  existingGame.ImageUri = string.IsNullOrEmpty(updatedGame.ImageUri) ? existingGame.ImageUri : updatedGame.ImageUri;
+  existingGame.ImageUri = updatedGame.ImageUri;
 
   return Results.NoContent();
 });
